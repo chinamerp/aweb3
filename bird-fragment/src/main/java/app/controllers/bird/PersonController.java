@@ -18,13 +18,13 @@ limitations under the License.
  * @author Igor Polevoy: 12/22/13 9:25 PM
  */
 
-package app.controllers;
+package app.controllers.bird;
 
 import org.javalite.activeweb.AppController;
 
-public class BirdController extends AppController {
+public class PersonController extends AppController {
 
    public void index(){
-       respond("Hi, I'm a Pigeon!").contentType("text/plain");
+       respond("Hi, I'm a Person!").contentType("text/plain");
    }
 }
