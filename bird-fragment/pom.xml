@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.kozelka.lab</groupId>
+        <artifactId>servlet3-lab</artifactId>
+        <version>1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>net.kozelka.lab</groupId>
+    <artifactId>bird-fragment</artifactId>
+    <version>1-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+        <jdbc.url>jdbc:mysql://localhost/budget_dev</jdbc.url>
+        <jdbc.user>root</jdbc.user>
+        <jdbc.password>x5</jdbc.password>
+        <jdbc.test.url>jdbc:mysql://localhost/budget_test</jdbc.test.url>
+        <activeweb.version>1.9</activeweb.version>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <id>devel-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                            <archiveClasses>true</archiveClasses>
+                            <primaryArtifact>false</primaryArtifact>
+                            <warSourceDirectory>src/devel/webapp</warSourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <forkMode>never</forkMode>
+                    <reportFormat>brief</reportFormat>
+                    <trimStackTrace>true</trimStackTrace>
+                    <useFile>false</useFile>
+                    <includes>
+                        <include>**/*Spec*.java</include>
+                        <include>**/*Test*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+
+
+            <plugin>
+                <groupId>org.javalite</groupId>
+                <artifactId>activejdbc-instrumentation</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <!-- WORKS! -->
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.1.0.v20131115</version>
+                <configuration>
+                    <webAppConfig>
+                        <contextPath>/</contextPath>
+                    </webAppConfig>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- DOES NOT WORK -->
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.0</version>
+                <!-- http://tomcat.apache.org/maven-plugin-2.0/ -->
+                <configuration>
+                    <port>3001</port>
+                    <path>/</path>
+                    <!--       <warSourceDirectory>src/main/resources/META-INF/resources</warSourceDirectory> -->
+                         <systemProperties>
+                             <systemProperty>
+                                 <name>activejdbc.log</name>
+                                 <value></value>
+                             </systemProperty>
+                             <systemProperty>
+                                 <name>active_reload</name>
+                                 <value>true</value>
+                             </systemProperty>
+                             <systemProperty>
+                                 <name>activeweb.log.request</name>
+                                 <value>true</value>
+                             </systemProperty>
+                         </systemProperties>
+                     </configuration>
+                 </plugin>
+             </plugins>
+         </build>
+
+         <dependencies>
+             <dependency>
+                 <groupId>javax.servlet</groupId>
+                 <artifactId>javax.servlet-api</artifactId>
+                 <scope>provided</scope>
+             </dependency>
+             <dependency>
+                 <groupId>junit</groupId>
+                 <artifactId>junit</artifactId>
+                 <version>4.8.1</version>
+                 <scope>test</scope>
+             </dependency>
+             <dependency>
+                 <groupId>org.javalite</groupId>
+                 <artifactId>activeweb</artifactId>
+                 <version>${activeweb.version}</version>
+             </dependency>
+             <dependency>
+                 <groupId>org.javalite</groupId>
+                 <artifactId>activeweb-testing</artifactId>
+                 <version>${activeweb.version}</version>
+                 <scope>test</scope>
+             </dependency>
+
+             <dependency>
+                 <groupId>mysql</groupId>
+                 <artifactId>mysql-connector-java</artifactId>
+                 <version>5.0.4</version>
+             </dependency>
+             <dependency>
+                 <groupId>org.slf4j</groupId>
+                 <artifactId>slf4j-simple</artifactId>
+                 <version>1.6.4</version>
+             </dependency>
+             <dependency>
+                 <groupId>com.sun</groupId>
+                 <artifactId>tools</artifactId>
+                 <version>1.5.0</version>
+                 <scope>system</scope>
+                 <systemPath>${java.home}/../lib/tools.jar</systemPath>
+             </dependency>
+         </dependencies>
+
+         <pluginRepositories>
+             <pluginRepository>
+                 <id>c5-public-repository</id>
+                 <url>http://mvn.carbonfive.com/public</url>
+             </pluginRepository>
+         </pluginRepositories>
+
+     </project>
